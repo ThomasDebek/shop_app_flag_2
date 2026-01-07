@@ -1,28 +1,47 @@
 <div id="products" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
   <% @products.each do |product| %>
-    <div class="border rounded-lg p-4 shadow hover:shadow-lg transition duration-200 bg-gray-800 text-gray-100">
-      <h2 class="text-xl font-semibold mb-2 flex items-center justify-between">
-        <%= product.name %>
-        <div class="flex gap-2">
-          <% if product.featured %>
-            <span class="bg-yellow-500 text-gray-900 px-2 py-1 rounded text-xs font-bold">Featured</span>
-          <% end %>
-          <% unless product.active %>
-            <span class="bg-red-600 text-white px-2 py-1 rounded text-xs font-bold">Inactive</span>
+    <%= turbo_frame_tag dom_id(product) do %>
+      <div class="border rounded-lg p-4 shadow hover:shadow-lg transition duration-200 bg-gray-800 text-gray-100">
+        <h2 class="text-xl font-semibold mb-2 flex items-center justify-between">
+          <%= product.name %>
+          <div class="flex gap-2">
+            <% if product.featured %>
+              <span class="bg-yellow-500 text-gray-900 px-2 py-1 rounded text-xs font-bold">Featured</span>
+            <% end %>
+            <% unless product.active %>
+              <span class="bg-red-600 text-white px-2 py-1 rounded text-xs font-bold">Inactive</span>
+            <% end %>
+          </div>
+        </h2>
+
+        <p class="text-gray-300 mb-2"><%= product.description %></p>
+        <p class="font-bold text-lg mb-4"><%= number_to_currency(product.price, unit: "zł") %></p>
+
+        <div class="flex justify-between items-center gap-2">
+          <%= link_to "Show", product, class: "text-blue-500 hover:text-blue-700 font-medium" %>
+
+          <% if user_signed_in? && product.user == current_user %>
+            <div class="flex gap-2">
+              <%= link_to "Edit", edit_product_path(product), class: "text-yellow-500 hover:text-yellow-700 font-medium" %>
+              <%= link_to "Delete", product, method: :delete, data: { confirm: "Are you sure?" }, class: "text-red-500 hover:text-red-700 font-medium" %>
+
+              <!-- Toggle Active -->
+              <%= button_to (product.active ? "Set Inactive" : "Set Active"),
+                            toggle_active_product_path(product),
+                            method: :patch,
+                            data: { turbo_frame: dom_id(product) },
+                            class: "px-2 py-1 rounded text-sm font-medium #{product.active ? 'bg-red-600 hover:bg-red-700 text-white' : 'bg-green-600 hover:bg-green-700 text-white'}" %>
+
+              <!-- Toggle Featured -->
+              <%= button_to (product.featured ? "Unset Featured" : "Set Featured"),
+                            toggle_featured_product_path(product),
+                            method: :patch,
+                            data: { turbo_frame: dom_id(product) },
+                            class: "px-2 py-1 rounded text-sm font-medium #{product.featured ? 'bg-gray-500 hover:bg-gray-600 text-gray-100' : 'bg-yellow-500 hover:bg-yellow-600 text-gray-900'}" %>
+            </div>
           <% end %>
         </div>
-      </h2>
-
-      <p class="text-gray-300 mb-2"><%= product.description %></p>
-      <p class="font-bold text-lg mb-4"><%= number_to_currency(product.price, unit: "zł") %></p>
-
-      <div class="flex justify-between">
-        <%= link_to "Show", product, class: "text-blue-500 hover:text-blue-700 font-medium" %>
-        <% if user_signed_in? && product.user == current_user %>
-          <%= link_to "Edit", edit_product_path(product), class: "text-yellow-500 hover:text-yellow-700 font-medium" %>
-          <%= link_to "Delete", product, method: :delete, data: { confirm: "Are you sure?" }, class: "text-red-500 hover:text-red-700 font-medium" %>
-        <% end %>
       </div>
-    </div>
+    <% end %>
   <% end %>
 </div>

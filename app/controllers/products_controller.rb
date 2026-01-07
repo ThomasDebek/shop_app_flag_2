@@ -1,10 +1,21 @@
 class ProductsController < ApplicationController
-  before_action :set_product, only: %i[ show edit update destroy ]
+  before_action :set_product, only: %i[ show edit update destroy toggle_active toggle_featured]
   before_action :authorize_user!, only: %i[ edit update destroy ]
 
   # GET /products or /products.json
   def index
     @products = Product.all
+  end
+
+  def toggle_active
+    @product.update(active: !@product.active)
+    redirect_to products_path, notice: "Flaga Active została zmieniona."
+  end
+
+  # Toggle Featured
+  def toggle_featured
+    @product.update(featured: !@product.featured)
+    redirect_to products_path, notice: "Flaga Featured została zmieniona."
   end
 
   # GET /products/1 or /products/1.json
