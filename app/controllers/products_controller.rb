@@ -1,5 +1,6 @@
 class ProductsController < ApplicationController
   before_action :set_product, only: %i[ show edit update destroy ]
+  before_action :authorize_user!, only: %i[ edit update destroy ]
 
   # GET /products or /products.json
   def index
@@ -67,4 +68,8 @@ class ProductsController < ApplicationController
     def product_params
       params.expect(product: [ :name, :description, :price ])
     end
+
+  def authorize_user!
+    redirect_to products_path, alert: "You must be logged in to access this page." unless @product.user == current_user
+  end
 end
