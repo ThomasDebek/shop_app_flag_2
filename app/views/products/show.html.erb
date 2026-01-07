@@ -1,10 +1,16 @@
-<p style="color: green"><%= notice %></p>
+<% content_for :title, @product.name %>
 
-<%= render @product %>
+<div class="max-w-3xl mx-auto bg-gray-800 p-6 rounded-lg shadow-lg text-gray-100">
+  <h1 class="text-3xl font-bold mb-4"><%= @product.name %></h1>
+  <p class="text-gray-300 mb-4"><%= @product.description %></p>
+  <p class="font-bold text-xl mb-6"><%= number_to_currency(@product.price, unit: "zł") %></p>
 
-<div>
-  <%= link_to "Edit this product", edit_product_path(@product) %> |
-  <%= link_to "Back to products", products_path %>
+  <div class="flex gap-4">
+    <%= link_to "Back to Products", products_path, class: "bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded" %>
 
-  <%= button_to "Destroy this product", @product, method: :delete %>
+    <% if user_signed_in? && @product.user == current_user %>
+      <%= link_to "Edit", edit_product_path(@product), class: "bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded" %>
+      <%= link_to "Delete", @product, method: :delete, data: { confirm: "Are you sure?" }, class: "bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded" %>
+    <% end %>
+  </div>
 </div>
