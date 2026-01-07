@@ -1,16 +1,24 @@
-<p style="color: green"><%= notice %></p>
+<%# app/views/products/index.html.erb %>
 
 <% content_for :title, "Products" %>
 
-<h1>Products</h1>
+<% if notice %>
+  <p class="bg-green-100 text-green-800 p-2 rounded mb-4"><%= notice %></p>
+<% end %>
 
-<div id="products">
+<h1 class="text-3xl font-bold mb-6">Products</h1>
+
+<div id="products" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
   <% @products.each do |product| %>
-    <%= render product %>
-    <p>
-      <%= link_to "Show this product", product %>
-    </p>
+    <div class="border rounded-lg p-4 shadow hover:shadow-lg transition duration-200">
+      <%= render product %>
+      <p class="mt-2">
+        <%= link_to "Show this product", product, class: "text-blue-600 hover:text-blue-800 font-medium" %>
+      </p>
+    </div>
   <% end %>
 </div>
 
-<%= link_to "New product", new_product_path %>
+<div class="mt-6">
+  <%= link_to "New product", new_product_path, class: "bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded font-medium" %>
+</div>
