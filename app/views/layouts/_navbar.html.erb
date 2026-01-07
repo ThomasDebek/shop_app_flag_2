@@ -1,0 +1,11 @@
+<nav class="p-4 border-b mb-6 flex gap-4">
+  <%= link_to "Produkty", products_path, class: "font-semibold" %>
+
+  <% if user_signed_in? %>
+    <span>Zalogowany: <%= current_user.name %></span>
+    <%= link_to "Wyloguj", destroy_user_session_path, data: { turbo_method: :delete }, class: "text-red-600" %>
+  <% else %>
+    <%= link_to "Zaloguj", new_user_session_path, class: "text-blue-600" %>
+    <%= link_to "Rejestracja", new_user_registration_path, class: "text-green-600" %>
+  <% end %>
+</nav>
